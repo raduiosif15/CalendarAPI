@@ -1,0 +1,15 @@
+{
+  "require": {
+    "vlucas/phpdotenv": "^2.4",
+    "okta/jwt-verifier": "^0.4.0",
+    "guzzlehttp/psr7": "^1.6",
+    "web-token/jwt-framework": "^2.1",
+    "web-token/jwt-core": "^2.1",
+    "firebase/php-jwt": "^5.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Src\\": "src/"
+    }
+  }
+}
