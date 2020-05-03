@@ -13,7 +13,7 @@ class EventGateway {
     public function findAll()
     {
         $statement = "
-            SELECT description FROM event;
+            SELECT * FROM event;
         ";
 
         try {
