@@ -13,7 +13,22 @@ class EventGateway {
     public function findAll()
     {
         $statement = "
-            SELECT * FROM event;
+            SELECT description FROM event;
+        ";
+
+        try {
+            $statement = $this->db->query($statement);
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            return $result;
+        } catch (\PDOException $e) {
+            exit($e->getMessage());
+        }
+    }
+
+    public function findChronologically()
+    {
+        $statement = "
+            SELECT * FROM event ORDER BY fromToDate;
         ";
 
         try {
@@ -52,22 +67,6 @@ class EventGateway {
         try {
             $statement = $this->db->prepare($statement);
             $statement->execute(array($date));
-            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
-            return $result;
-        } catch (\PDOException $e) {
-            exit($e->getMessage());
-        }
-    }
-
-    public function findChronologically()
-    {
-        $statement = "
-            SELECT * FROM event
-                ORDERED BY fromToDate;
-        ";
-
-        try {
-            $statement = $this->db->prepare($statement);
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             return $result;
         } catch (\PDOException $e) {

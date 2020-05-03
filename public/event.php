@@ -13,9 +13,10 @@ $token = obtainToken($issuer, $clientId, $clientSecret, $scope);
 $runningState = strtolower(trim($argv[1]));
 
 if ($runningState == 'test') {
-    getAllEvents($token);
-    getEvent($token, 1);
-    getEventByDate($token, '1999-12-15');
+    //getAllEvents($token);
+    getAllEventsChronologically($token);
+    //getEvent($token, 1);
+    //getEventByDate($token, '1999-12-15');
 }
 
 // end of event.php flow
@@ -56,7 +57,7 @@ function obtainToken($issuer, $clientId, $clientSecret, $scope) {
 }
 
 function getAllEvents($token) {
-    echo "Getting all users...";
+    echo "Getting all events...";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:8000/event");
     curl_setopt( $ch, CURLOPT_HTTPHEADER, [
@@ -71,8 +72,24 @@ function getAllEvents($token) {
     var_dump($response);
 }
 
+function getAllEventsChronologically($token) {
+    echo "Getting all events chronologically...";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:8000/event/chronologically");
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        "Authorization: $token"
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+
+    $response = json_decode($response, true);
+
+    var_dump($response);
+}
+
 function getEvent($token, $id) {
-    echo "Getting user with id#$id...";
+    echo "Getting event with id#$id...";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:8000/event/" . $id);
     curl_setopt( $ch, CURLOPT_HTTPHEADER, [
@@ -88,7 +105,7 @@ function getEvent($token, $id) {
 }
 
 function getEventByDate($token, $date) {
-    echo "Getting user with date#$date...";
+    echo "Getting event with date#$date...";
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:8000/event/" . $date);
     curl_setopt( $ch, CURLOPT_HTTPHEADER, [

@@ -21,12 +21,16 @@ if ($uri[1] !== 'event') {
 // the user id is, of course, optional and must be a number:
 $eventId = null;
 $eventDate = null;
+$eventChronologically = null;
 if (isset($uri[2])) {
 
     $temporary = $uri[2];
 
     if (strpos($temporary, '-') !== false) {
-        $eventDate = $temporary;
+        $eventDate = trim($temporary);
+    }
+    if (strpos($temporary, "chr") !== false) {
+        $eventChronologically = trim($temporary);
     }
     else {
         $eventId = (int) $temporary;
@@ -42,7 +46,7 @@ if (! authenticate()) {
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 
 // pass the request method and user ID to the EventController:
-$controller = new EventController($dbConnection, $requestMethod, $eventId, $eventDate);
+$controller = new EventController($dbConnection, $requestMethod, $eventId, $eventDate, $eventChronologically);
 $controller->processRequest();
 
 function authenticate() {

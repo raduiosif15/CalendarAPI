@@ -9,15 +9,17 @@ class EventController {
     private $requestMethod;
     private $eventId;
     private $eventDate;
+    private $eventChronologically;
 
     private $eventGateway;
 
-    public function __construct($db, $requestMethod, $eventId, $eventDate)
+    public function __construct($db, $requestMethod, $eventId, $eventDate, $eventChronologically)
     {
         $this->db = $db;
         $this->requestMethod = $requestMethod;
         $this->eventId = $eventId;
         $this->eventDate = $eventDate;
+        $this->eventChronologically = $eventChronologically;
 
         $this->eventGateway = new EventGateway($db);
     }
@@ -30,6 +32,8 @@ class EventController {
                     $response = $this->getEvent($this->eventId);
                 } else if ($this->eventDate) {
                     $response = $this->getEventByDate($this->eventDate);
+                } else if ($this->eventChronologically) {
+                    $response = $this->getAllEventsChronologically();
                 } else {
                     $response = $this->getAllEvents();
                 };
@@ -61,6 +65,14 @@ class EventController {
         return $response;
     }
 
+    private function getAllEventsChronologically()
+    {
+        $result = $this->eventGateway->findChronologically();
+        $response['status_code_header'] = 'HTTP/1.1 200 OK';
+        $response['body'] = json_encode($result);
+        return $response;
+    }
+
     private function getEvent($id)
     {
         $result = $this->eventGateway->find($id);
@@ -71,6 +83,7 @@ class EventController {
         $response['body'] = json_encode($result);
         return $response;
     }
+
 
     private function getEventByDate($date)
     {
